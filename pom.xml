@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>se.ff.cc</groupId>
+  <artifactId>prldemo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>prldemo</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-junit</artifactId>
+        <version>1.2.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-java</artifactId>
+        <version>1.2.4</version>
+        <scope>test</scope>
+      </dependency>
+  </dependencies>
+
+
+
+    <build>
+    <plugins>
+        <plugin>
+            <groupId>com.github.temyers</groupId>
+            <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+            <version>4.2.0</version>
+            <executions>
+                <execution>
+                    <id>generateRunners</id>
+                    <phase>generate-test-sources</phase>
+                    <goals>
+                        <goal>generateRunners</goal>
+                    </goals>
+                    <configuration>
+                        <glue>
+                            <package>se.ff.cc</package>
+                        </glue>
+                        <outputDirectory>target/generated-test-sources/cucumber</outputDirectory>
+                        <featuresDirectory>src/test/resources/</featuresDirectory>
+                        <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+                        <namingPattern>Parallel{c}IT</namingPattern>
+                        <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+                        <parallelScheme>FEATURE</parallelScheme>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.19.1</version>
+            <executions>
+                <execution>
+                    <id>acceptance-test</id>
+                    <phase>integration-test</phase>
+                    <goals>
+                        <goal>integration-test</goal>
+                    </goals>
+                    <configuration>
+                        <forkCount>10</forkCount>
+                        <reuseForks>true</reuseForks>
+                        <includes>
+                            <include>**/*IT.class</include>
+                        </includes>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+    </build>
+
+
+</project>
+
+<!--
+mvn  -Dtest=SomePatternThatDontMatchAnything -DfailIfNoTests=false verify
+-->
